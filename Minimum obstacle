@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+
+public class Solution {
+    public int MinimumObstacles(IList<IList<int>> grid) {
+        int m = grid.Count;
+        int n = grid[0].Count;
+        
+        // Initialize the distance grid with a large value (int.MaxValue)
+        var distance = new int[m, n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                distance[i, j] = int.MaxValue;
+            }
+        }
+
+        // Deque equivalent in C#
+        var dq = new LinkedList<(int, int)>();
+
+        // Starting point
+        distance[0, 0] = 0;
+        dq.AddFirst((0, 0)); // Push front
+
+        // Directions: Right, Down, Left, Up
+        var directions = new (int, int)[] {
+            (0, 1), (1, 0), (0, -1), (-1, 0)
+        };
+
+        while (dq.Count > 0) {
+            var (x, y) = dq.First.Value;
+            dq.RemoveFirst();
+
+            foreach (var (dx, dy) in directions) {
+                int nx = x + dx, ny = y + dy;
+
+                // Check if the new position is within bounds
+                if (nx >= 0 && nx < m && ny >= 0 && ny < n) {
+                    int newDist = distance[x, y] + grid[nx][ny];
+
+                    // If the new distance is smaller, update and push to the deque
+                    if (newDist < distance[nx, ny]) {
+                        distance[nx, ny] = newDist;
+
+                        
