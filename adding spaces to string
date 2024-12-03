@@ -1,0 +1,20 @@
+using System;
+using System.Collections.Generic;
+
+public class Solution {
+    public string AddSpaces(string s, List<int> spaces) {
+        int m = spaces.Count, n = s.Length;
+        char[] t = new char[n + m];  // Array to hold the new string with spaces
+        
+        int j = 0; // Pointer for spaces
+        for (int i = 0; i < n; i++) {
+            if (j < m && i == spaces[j]) {
+                t[i + j] = ' ';  // Insert space at the appropriate position
+                j++;  // Move to the next space index
+            }
+            t[i + j] = s[i];  // Add the character from the original string
+        }
+        
+        return new string(t);
+    }
+}
