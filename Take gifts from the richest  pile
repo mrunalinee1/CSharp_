@@ -1,0 +1,24 @@
+public class Solution {
+    public long PickGifts(int[] gifts, int k) {
+        long total = 0;
+        var maxHeap = new SortedSet<int>();
+        foreach (var gift in gifts) {
+            total += gift;
+            maxHeap.Add(gift);
+        }
+        
+        for (int i = 0; i < k; i++) {
+            // Extract the largest gift
+            int largest = maxHeap.Max;
+            maxHeap.Remove(largest);
+            // Calculate the new value after taking the square root
+            int new_value = (int)Math.Sqrt(largest);
+            // Update the total value
+            total -= (largest - new_value);
+            // Add the new value back to the max-heap
+            maxHeap.Add(new_value);
+        }
+        
+        return total;
+    }
+}
