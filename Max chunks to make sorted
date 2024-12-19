@@ -1,0 +1,14 @@
+public class Solution {
+    public int MaxChunksToSorted(int[] arr) {
+        int[] s = (int[])arr.Clone();
+        Array.Sort(s);
+        int c = 0, ind = -1;
+        for (int i = 0; i < arr.Length; i++) {
+            ind = Math.Max(ind, Array.IndexOf(s, arr[i]));
+            if (ind == i) {
+                c++;
+            }
+        }
+        return c;
+    }
+}
