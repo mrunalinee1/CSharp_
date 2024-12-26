@@ -1,0 +1,36 @@
+public class Solution {
+    public int FindTargetSumWays(int[] nums, int target) {
+        int n = nums.Length, mid = n / 2;
+        var sums1 = ComputeSums(nums, 0, mid);
+        var sums2 = ComputeSums(nums, mid, n);
+        var countMap = new Dictionary<long, long>();
+
+        foreach (var sum in sums2) {
+            if (!countMap.ContainsKey(sum)) countMap[sum] = 0;
+            countMap[sum]++;
+        }
+
+        long total = 0;
+        foreach (var sum in sums1) {
+            long complement = target - sum;
+            if (countMap.ContainsKey(complement)) {
+                total += countMap[complement];
+            }
+        }
+
+        return (int)total;
+    }
+
+    private List<long> ComputeSums(int[] nums, int start, int end) {
+        var sums = new List<long> { 0 };
+        for (int i = start; i < end; i++) {
+            int num = nums[i];
+            int n = sums.Count;
+            for (int j = 0; j < n; j++) {
+                sums.Add(sums[j] + num);
+                sums[j] -= num;
+            }
+        }
+        return sums;
+    }
+}
