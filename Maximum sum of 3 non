@@ -1,0 +1,49 @@
+public class Solution {
+    public int[] MaxSumOfThreeSubarrays(int[] nums, int k) {
+        int n = nums.Length;
+        int[] ans = [-1,-1,-1];
+        long[] prefixSum = new long[1+n-k];
+        long curSum = 0;
+        for(int i=0;i<k;i++)                      // O(k)
+            curSum+=nums[i];
+        
+        for(int i=k;i<n;i++)                        // O(n)
+        {
+            prefixSum[i-k] = curSum;
+            curSum+=nums[i]-nums[i-k];
+        }
+        prefixSum[n-k] = curSum;
+        
+        Dictionary<string,long> cache = new();
+        int idx = 0, count = 0;
+        while(idx <= n-((3-count)*k) && count<3)
+        {
+            var include = prefixSum[idx] + GetMaxSum(idx+k,count+1);
+            var skip = GetMaxSum(idx+1,count);
+            if(include>=skip)
+            {
+                ans[count++] = idx;
+                idx+=k;
+            }
+            else idx++;
+        }
+
+        return ans;
+        
+        // local helper func
+        long GetMaxSum(int i, int subArrCount)      // O(n)
+        {
+            if((subArrCount == 3) || i> (n-((3-subArrCount)*k)))
+                return 0;
+            
+            string key = i+"|"+subArrCount;
+            if(cache.TryGetValue(key, out long sum))
+                return sum;
+            
+            var includeCur = prefixSum[i] + GetMaxSum(i+k, subArrCount+1);
+            var skipCur = GetMaxSum(i+1, subArrCount);
+
+            return cache[key] = Math.Max(includeCur,skipCur);
+        }
+    }
+}
